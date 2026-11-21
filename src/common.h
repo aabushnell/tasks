@@ -28,7 +28,7 @@ inline uint64_t now_ns() {
       .count();
 }
 
-enum AccessMode : uint8_t { Read, Write };
+enum AccessMode : uint8_t { Ref, Mut };
 
 struct Depend {
   BlockID id;
