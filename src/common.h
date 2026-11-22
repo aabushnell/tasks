@@ -34,8 +34,6 @@ enum AccessMode : uint8_t { Ref, Mut };
 
 struct Depend {
   BlockID id;
-  uint64_t offset; // relative to block base
-  uint64_t len;
   AccessMode mode;
 };
 
