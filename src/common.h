@@ -47,6 +47,24 @@ struct TaskSpec {
   Depend dependencies[INLINE_DEPS];
 };
 
+// NOTE: currently unused
+enum SubmissionType : uint8_t { S_Alloc, S_Declare, S_Submit };
+
+struct Submission {
+  SubmissionType type;
+  uint32_t reply_slot;
+  union {
+    struct {
+      uint64_t size;
+    } alloc;
+    struct {
+      char ref[ENV_PATH_LEN];
+    } env_ref;
+    TaskSpec task;
+  };
+};
+// end-NOTE:
+
 struct TaskTrace {
   TaskID id;
   uint64_t enqueue_ts;
