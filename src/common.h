@@ -10,6 +10,7 @@ using BlockID   = uint32_t;
 using KernelID  = uint32_t;
 using EnvID     = uint32_t;
 using UserID    = uint32_t;
+using ExecID    = uint32_t;
 
 constexpr size_t    ARENA_SIZE      = 64ull << 20;
 constexpr size_t    DISP_CAP        = 1024;
@@ -20,6 +21,7 @@ constexpr int       MAX_ENVS        = 32;
 constexpr size_t    ENV_PATH_LEN    = 192;
 constexpr uint16_t  INLINE_DEPS     = 24;
 
+constexpr BlockID   INVALID_BLOCK   = UINT32_MAX;
 constexpr EnvID     INVALID_ENV     = UINT32_MAX;
 
 inline uint64_t now_ns() {
