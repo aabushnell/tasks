@@ -1,16 +1,35 @@
 CXX      ?= g++
-CXXFLAGS ?= -std=c++20 -O2 -Wall
+CXXFLAGS ?= -std=c++20 -O2 -Wall -I.
+LDLIBS   ?= -ldl
 
-all: runtime stencil.so
+RT_SRCS := \
+	main.cpp \
+	client/client.cpp \
+	node/node.cpp \
+	node/dag.cpp \
+	node/registry.cpp \
+	runtime/executor.cpp \
+	runtime/supervisor.cpp \
+	env_source.cpp \
+	demo/vec/program.cpp
 
-rt: main.cpp supervisor.cpp env_source.cpp executor.cpp \
-	 common.h supervisor.h executor.h env_source.h env_abi.h
-	$(CXX) $(CXXFLAGS) -o $@ main.cpp supervisor.cpp env_source.cpp executor.cpp -ldl
+OBJS := $(RT_SRCS:.cpp=.o)
+DEPS := $(OBJS:.o=.d)
 
-stencil.so: env_stencil.cpp env_abi.h
-	$(CXX) $(CXXFLAGS) -shared -fPIC -o $@ env_stencil.cpp
+all: rt demo/vec/vec.so
+
+rt: $(OBJS)
+	$(CXX) $(CXXFLAGS) -o $@ $(OBJS) $(LDLIBS)
+
+%.o: %.cpp
+	$(CXX) $(CXXFLAGS) -MMD -MP -c -o $@ $<
+
+demo/vec/vec.so: demo/vec/env.cpp env_abi.h
+	$(CXX) $(CXXFLAGS) -shared -fPIC -o $@ $<
+
+-include $(DEPS)
 
 clean:
-	rm -f runtime
+	rm -f rt $(OBJS) $(DEPS)
 
-.PHONY: clean
+.PHONY: all clean
